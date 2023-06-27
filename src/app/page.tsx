@@ -1,95 +1,95 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
 
-export default function Home() {
+import useFilterMovies from "@/hooks/useFilterMovies";
+import styled from "styled-components";
+import FilmCard from "../components/UI/FilmCart/FilmCart";
+import Input from "../components/UI/Input/Input";
+import Select from "../components/UI/Select/Select";
+
+const Wrapper = styled.div`
+  box-sizing: border-box;
+  width: 100%;
+  padding: 85px 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 23px;
+`;
+
+const Plug = styled.div`
+  width: 30%;
+`;
+
+const FilmsWrapper = styled.div`
+  flex-grow: 1;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+`;
+
+const FilterWrapper = styled.div`
+  position: fixed;
+  left: 10px;
+  width: 30%;
+  height: calc(100% - 168px);
+  top: 84px;
+  border-radius: 10px;
+  background-color: white;
+  padding: 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+const MainPage = () => {
+  const {
+    movies,
+    name,
+    changeName,
+    cinemas,
+    selectedCinemaName,
+    selectCinema,
+    genres,
+    selectGenre,
+    selectedGenre,
+  } = useFilterMovies();
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
+    <Wrapper>
+      <Plug />
+      <FilterWrapper>
+        <h4>Фильтр поиска</h4>
+        <Input
+          value={name}
+          onChange={(e) => {
+            changeName(e);
+          }}
+          inputName="Название"
+          placeHolder="Введите название"
         />
-      </div>
+        <Select
+          options={genres}
+          pickOption={selectGenre}
+          value={selectedGenre}
+          inputName="Жанр"
+          placeHolder="Выберите жанр"
+        />
+        <Select
+          value={selectedCinemaName}
+          pickOption={selectCinema}
+          options={cinemas.map((cinema) => cinema.name)}
+          inputName="Кинотеатр"
+          placeHolder="Выберите кинотеатр"
+        />
+      </FilterWrapper>
+      <FilmsWrapper>
+        {movies.map((filmData) => (
+          <FilmCard key={filmData.id} movieData={filmData} />
+        ))}
+      </FilmsWrapper>
+    </Wrapper>
+  );
+};
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
-}
+export default MainPage;
