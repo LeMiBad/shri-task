@@ -4,16 +4,15 @@
 import CrossIcon from "@/components/Icons/CrossIcon"
 import Modal from "@/components/Modal/Modal"
 import useOpen from "@/hooks/useOpen"
-import { addBasketItem, clearBasketItem, removeBasketItem } from "@/store/basket/basketSlice"
-import { NextThunkDispatch, RootState } from "@/store/store"
+import { removeBasketItem } from "@/store/basket/basketSlice"
+import { RootState } from "@/store/store"
 import { IMovie } from "@/types/movie"
 import Link from "next/link"
-import { FC, useState } from "react"
+import { FC } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import styled from "styled-components"
 import Button from "../Button/Button"
 import SetReview from "../SetReview/SetReview"
-import SmallButton from "../SmallButton/SmallButton"
 
 
 interface Props {
@@ -67,35 +66,35 @@ const NameWrapper = styled.div`
 `
 
 const FilmCart: FC<Props> = ({ movieData, isBasket }) => {
-  const dispatch = useDispatch()
   const {isOpen, switchHandler} = useOpen()
-  const { data } = useSelector(((state: RootState) => state.basket))
+  const dispatch = useDispatch()
 
-  console.log(isOpen)
 
   return (
-    <Wrapper>
+    <>
       <Modal title="Удаление билета" isOpen={isOpen} onClose={switchHandler}>
         <br/>
         <p>Вы уверены что хотите удалить билет?</p>
         <br/>
         <div style={{ display: "flex", gap: 10}}>
-          <Button onClick={() => dispatch(clearBasketItem(movieData))} variant="default">Да</Button>
+          <Button onClick={() => dispatch(removeBasketItem(movieData))} variant="default">Да</Button>
           <Button onClick={switchHandler} variant="outlined">Нет</Button>
         </div>
       </Modal>
-      <div style={{ position: "absolute", right:15, top: 30 }}>
-        <CrossIcon onClick={() => {() => switchHandler(); console.log("wewe")}}/>
-      </div>
-      <FilmInfoWrapper>
-        <FilmImage src={movieData.posterUrl}/>
-        <NameWrapper>
-          <Link href={`film/${movieData.id}`}>{movieData.title}</Link>
-          <h5>{movieData.genre}</h5>
-        </NameWrapper>
-      </FilmInfoWrapper>
-      <SetReview movieData={movieData} />
-    </Wrapper>
+      <Wrapper>
+        {isBasket && <div onClick={switchHandler} style={{ position: "absolute", right:15, top: 30 }}>
+          <CrossIcon onClick={() => {}}/>
+        </div>}
+        <FilmInfoWrapper>
+          <FilmImage src={movieData.posterUrl}/>
+          <NameWrapper>
+            <Link href={`film/${movieData.id}`}>{movieData.title}</Link>
+            <h5>{movieData.genre}</h5>
+          </NameWrapper>
+        </FilmInfoWrapper>
+        <SetReview switchHandler={switchHandler} movieData={movieData} />
+      </Wrapper>
+    </>
   )
 }
 

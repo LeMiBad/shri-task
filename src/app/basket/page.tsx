@@ -4,8 +4,9 @@ import Modal from "@/components/Modal/Modal"
 import Button from "@/components/UI/Button/Button"
 import FilmCart from "@/components/UI/FilmCart/FilmCart"
 import useOpen from "@/hooks/useOpen"
+import { clearBasketItem } from "@/store/basket/basketSlice"
 import { RootState } from "@/store/store"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import styled from "styled-components"
 
 const Wrapper = styled.div`
@@ -49,6 +50,7 @@ const CounterWrapper = styled.div`
 
 
 const BasketPage = () => {
+  const dispatch = useDispatch()
   const {switchHandler} = useOpen()
   const { data } = useSelector(((state: RootState) => state.basket))
 
@@ -56,11 +58,13 @@ const BasketPage = () => {
     return acc += item.counter
   }, 0)
 
+  
+
 
   return (
     <>
       <Wrapper>
-        {data.map(basketItem => <FilmCart key={basketItem.id} movieData={basketItem}/>)}
+        {data.map(basketItem => <FilmCart isBasket key={basketItem.id} movieData={basketItem}/>)}
       </Wrapper>
       {Boolean(counter) && (
         <ResultWrapper>
