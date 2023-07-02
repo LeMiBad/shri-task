@@ -4,7 +4,7 @@ import { FC } from "react"
 import styled from "styled-components"
 
 interface Props {
-  onClick: () => void
+  onClick?: () => void
 }
 
 const Cross = styled.svg`

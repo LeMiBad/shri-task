@@ -39,8 +39,9 @@ const basketSlice = createSlice({
     clearBasketItem: (state, action: PayloadAction<IMovie>) => {
       const index = state.data.findIndex(item => item.id === action.payload.id);
       
+      console.log("ewqfqwfwqfq")
       if(index !== -1) {
-        state.data[index].counter -= 1
+        state.data.splice(index, 1);
       }
     },
   },

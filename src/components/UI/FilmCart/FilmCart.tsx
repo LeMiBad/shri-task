@@ -4,14 +4,14 @@
 import CrossIcon from "@/components/Icons/CrossIcon"
 import Modal from "@/components/Modal/Modal"
 import useOpen from "@/hooks/useOpen"
-import { removeBasketItem } from "@/store/basket/basketSlice"
-import { RootState } from "@/store/store"
+import { clearBasketItem, removeBasketItem } from "@/store/basket/basketSlice"
 import { IMovie } from "@/types/movie"
 import Link from "next/link"
-import { FC } from "react"
+import { FC, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import styled from "styled-components"
 import Button from "../Button/Button"
+import ModalForDelete from "../ModalForDelete/ModalForDelete"
 import SetReview from "../SetReview/SetReview"
 
 
@@ -65,26 +65,38 @@ const NameWrapper = styled.div`
   }
 `
 
+
 const FilmCart: FC<Props> = ({ movieData, isBasket }) => {
   const {isOpen, switchHandler} = useOpen()
+  const [isOpenClear, setIsOpenClear] = useState(false)
   const dispatch = useDispatch()
 
+  const switchHandlerClear = () => {
+    setIsOpenClear(prev => !prev)
+  }
 
   return (
     <>
       <Modal title="Удаление билета" isOpen={isOpen} onClose={switchHandler}>
-        <br/>
-        <p>Вы уверены что хотите удалить билет?</p>
-        <br/>
-        <div style={{ display: "flex", gap: 10}}>
-          <Button onClick={() => dispatch(removeBasketItem(movieData))} variant="default">Да</Button>
-          <Button onClick={switchHandler} variant="outlined">Нет</Button>
-        </div>
+        <ModalForDelete
+          title="Вы уверены что хотите удалить билет?"
+          mainFunc={() => dispatch(removeBasketItem(movieData))}
+          exit={switchHandler}
+        />
+      </Modal>
+      <Modal title="Удаление всех билетов" isOpen={isOpenClear} onClose={switchHandlerClear}>
+        <ModalForDelete
+          title="Вы уверены что хотите удалить все билеты?"
+          mainFunc={() => dispatch(clearBasketItem(movieData))}
+          exit={switchHandlerClear}
+        />
       </Modal>
       <Wrapper>
-        {isBasket && <div onClick={switchHandler} style={{ position: "absolute", right:15, top: 30 }}>
-          <CrossIcon onClick={() => {}}/>
-        </div>}
+        {isBasket && (
+          <div onClick={() => switchHandlerClear()} style={{ position: "absolute", right:15, top: 30 }}>
+            <CrossIcon onClick={() => {}}/>
+          </div>
+        )}
         <FilmInfoWrapper>
           <FilmImage src={movieData.posterUrl}/>
           <NameWrapper>

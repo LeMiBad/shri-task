@@ -50,8 +50,6 @@ const CounterWrapper = styled.div`
 
 
 const BasketPage = () => {
-  const dispatch = useDispatch()
-  const {switchHandler} = useOpen()
   const { data } = useSelector(((state: RootState) => state.basket))
 
   const counter = data.reduce((acc, item) => {
